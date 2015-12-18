@@ -1,0 +1,36 @@
+.wrapper{
+	width: 100%;
+	height: 600px;
+	background-color: skyblue;
+}
+
+.carromBoard{
+	width: 600px;
+	height: 400px;	
+	background-color: gray;
+	border: 2px solid black; 
+	position: relative;
+}
+
+.gotti{
+	width: 40px;
+	height: 40px;
+	border-radius: 40px;
+	background-color: red;
+	position: absolute;
+	top: 0px;
+	left: 0px;	
+}
+
+.striker{
+	background-color: green;
+	width: 40px;
+	height: 40px;
+	border-radius: 60px;
+}
+
+#formWrapper{
+	position: absolute;
+	top:410px;
+	left:100px;	
+}
