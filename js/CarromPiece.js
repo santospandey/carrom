@@ -9,9 +9,12 @@ function CarromPiece()
 	this.x  = 0;
 	this.y = 0;
     this.radius = 20;
-    this.angle = 30;
-    this.velocity = 1;
-
+    this.angle = 15;
+    this.velocity = 5;
+    this.totalDistance = 1000;
+    this.distanceTravelled = 0;
+    this.times = 0;
+    
     this.boardHeight = 400;
     this.boardWidth = 600;
 
@@ -33,15 +36,27 @@ function CarromPiece()
     this.initSpeed = function(speedX,speedY)
     {
 	    that.dx = speedX;
-	    that.dy = speedY;	    
-    }
+	    that.dy = speedY;        	    
+    }    
 
 	this.moveGotti = function()
 	{	
 	    that.x += that.dx;
-	    that.y += that.dy;
+	    that.y += that.dy; 
+
+        var dist = Math.sqrt(that.dx*that.dx + that.dy*that.dy);
+        that.distanceTravelled += dist;        
+        
+        if(that.distanceTravelled >= that.totalDistance)
+        {
+            that.dx = 0;
+            that.dy = 0;
+        }       
+
 	    that.element.style.left = that.x + 'px';
-	    that.element.style.top = that.y + 'px';    	    
+	    that.element.style.top = that.y + 'px'; 
+        console.log("that.dx" + that.dx + 
+            "  that.dy" + that.dy);        
     }
 
     this.addClass = function(className) 
@@ -79,26 +94,48 @@ function CarromPiece()
     {
         console.log("that dx = " + that.dx + "  that dy = " + that.dy);        
         console.log("other dx = " + otherCarrom.dx + " other dy = " + otherCarrom.dy); 
-
-        otherCarrom.element.style.background = 'yellow'; 
-        this.element.style.background = 'purple';
-
-        that.dx = -that.dx;
-        that.dy = -that.dy;
-        otherCarrom.dx = -otherCarrom.dx;
-        otherCarrom.dy = -otherCarrom.dy; 
-
-        if(that.dx == 0 && that.dy == 0)
+        
+        // for color change 
+        if(otherCarrom.element.style.background == 'purple')
         {
-            that.dx = -otherCarrom.dx;
-            that.dy = -otherCarrom.dy;
+            otherCarrom.element.style.background = 'yellow';                 
+        }
+        else{
+            otherCarrom.element.style.background = 'purple';                 
+        }   
+
+        if(that.element.style.background == 'yellow')
+        {
+            that.element.style.background = 'purple';
+        }
+        else{
+            that.element.style.background = 'yellow';
+        }
+                 
+        // for unit vector calculation
+        var v2X = otherCarrom.x - that.x;
+        var v2Y = otherCarrom.y - that.y;
+
+        // for reducing divide by zero problem
+        if(v2Y == 0)
+        {
+            v2Y = 1;
         }
 
-        if(otherCarrom.dx == 0 && otherCarrom.dy == 0)
+        if(v2X == 0)
         {
-            otherCarrom.dx = -that.dx;
-            otherCarrom.dy = -that.dy;
-        }           
+            v2X = 1;
+        }
+                    
+        otherCarrom.dx = that.velocity*v2X/(Math.abs(v2X));
+        otherCarrom.dy = that.velocity*v2Y/(Math.abs(v2Y));                
+        that.dx = -otherCarrom.dx;
+        that.dy = -otherCarrom.dy;
+    
+        
+        console.log("other carrom: ");
+        console.log(otherCarrom.dx);
+        console.log(otherCarrom.dy); 
     }
 
     this.eventHandling = function(event)
@@ -113,10 +150,34 @@ function CarromPiece()
             that.slideRight();
         }
 
-        if(event.keyCode == 38)
+        if(event.keyCode == 65)
         {
             that.initSpeed(that.velocity*Math.cos(that.angle*Math.PI/180),
                 -that.velocity*Math.sin(that.angle*Math.PI/180));
+        }
+
+        if(event.keyCode == 40)
+        {
+            that.angle++;
+            console.log(that.angle);
+        }
+
+        if(event.keyCode == 38)
+        {
+            that.angle--;
+            console.log(that.angle);
+        }
+
+        if(event.keyCode == 66)
+        {
+            that.velocity++;
+            console.log(that.velocity);
+        }
+
+        if(event.keyCode == 67)
+        {
+            that.velocity--;
+            console.log(that.velocity);
         }        
     }
 

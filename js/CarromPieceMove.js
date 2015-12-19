@@ -27,8 +27,8 @@ function CarromPieceMove()
             carromMen[1].initGottiPos(250,250);
             carromMen[2].initGottiPos(300,300);
             carromMen[3].initGottiPos(350,350);
-            carromMen[4].initGottiPos(380,380);
-            carromMen[5].initGottiPos(200, 340);
+            carromMen[4].initGottiPos(400,300);
+            carromMen[5].initGottiPos(200,340);
             carromMen[6].initGottiPos(40,300);
             carromMen[7].initGottiPos(300,150);
             carromMen[8].initGottiPos(80,100);
@@ -61,7 +61,7 @@ function CarromPieceMove()
 
             for(var i = 0; i < totalCarromMen; i++)
             {
-                for(var j = i; j < totalCarromMen; j++)
+                for(var j = i+1; j < totalCarromMen; j++)
                 {
                     if( i!=j && carromMen[i].hitTest(carromMen[j]) == true)
                     {                            
