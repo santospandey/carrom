@@ -2,16 +2,16 @@ function CarromPiece()
 {
 	var that = this;	
 	this.element = document.createElement("div");
-    console.log(this.element);
-
+    console.log(this.element);    
+    
+    this.velocity = 0;
+    that._velocity; 
+    this.angle = 15;    
 	this.dx = 0;
 	this.dy = 0;
 	this.x  = 0;
 	this.y = 0;
-    this.radius = 20;
-    this.angle = 15;
-    this.velocity = 5;
-    this.totalDistance = 1000;
+    this.radius = 20;    
     this.distanceTravelled = 0;
     this.times = 0;
     
@@ -40,23 +40,38 @@ function CarromPiece()
     }    
 
 	this.moveGotti = function()
-	{	
+	{
+        that.dx *= 0.98;
+        that.dy *= 0.98;        
 	    that.x += that.dx;
 	    that.y += that.dy; 
 
         var dist = Math.sqrt(that.dx*that.dx + that.dy*that.dy);
         that.distanceTravelled += dist;        
-        
-        if(that.distanceTravelled >= that.totalDistance)
-        {
-            that.dx = 0;
-            that.dy = 0;
-        }       
-
+                
 	    that.element.style.left = that.x + 'px';
-	    that.element.style.top = that.y + 'px'; 
-        console.log("that.dx" + that.dx + 
-            "  that.dy" + that.dy);        
+	    that.element.style.top = that.y + 'px';   
+
+        // condition to check if gotti will be inside the hole
+        if(that.x < 20 && that.y < 20)
+        {            
+            that.element.style.background = 'transparent';
+        }
+
+        if(that.x < 20 && that.y > 340)
+        {            
+            that.element.style.background = 'transparent';
+        }
+
+        if(that.x > 540 && that.y < 20)
+        {            
+            that.element.style.background = 'transparent';
+        }
+
+        if(that.x > 540 && that.y > 340)
+        {            
+            that.element.style.background = 'transparent';
+        }
     }
 
     this.addClass = function(className) 
@@ -93,49 +108,72 @@ function CarromPiece()
     this.collision = function(otherCarrom)
     {
         console.log("that dx = " + that.dx + "  that dy = " + that.dy);        
-        console.log("other dx = " + otherCarrom.dx + " other dy = " + otherCarrom.dy); 
+        console.log("other dx = " + otherCarrom.dx + " other dy = " + otherCarrom.dy);         
         
-        // for color change 
-        if(otherCarrom.element.style.background == 'purple')
-        {
-            otherCarrom.element.style.background = 'yellow';                 
-        }
-        else{
-            otherCarrom.element.style.background = 'purple';                 
-        }   
+        // // for color change 
+        // if(otherCarrom.element.style.background == 'purple')
+        // {
+        //     otherCarrom.element.style.background = 'yellow';                 
+        // }
+        // else{
+        //     otherCarrom.element.style.background = 'purple';                 
+        // }   
 
-        if(that.element.style.background == 'yellow')
-        {
-            that.element.style.background = 'purple';
-        }
-        else{
-            that.element.style.background = 'yellow';
-        }
-                 
+        // if(that.element.style.background == 'yellow')
+        // {
+        //     that.element.style.background = 'purple';
+        // }
+        // else{
+        //     that.element.style.background = 'yellow';
+        // }
+
         // for unit vector calculation
         var v2X = otherCarrom.x - that.x;
         var v2Y = otherCarrom.y - that.y;
+        var distance = Math.sqrt(Math.pow((otherCarrom.x - that.x),2) + Math.pow((otherCarrom.y - that.y), 2));
 
         // for reducing divide by zero problem
-        if(v2Y == 0)
+        if(v2Y == 0 && v2Y == 0)
         {
             v2Y = 1;
-        }
-
-        if(v2X == 0)
-        {
             v2X = 1;
         }
-                    
-        otherCarrom.dx = that.velocity*v2X/(Math.abs(v2X));
-        otherCarrom.dy = that.velocity*v2Y/(Math.abs(v2Y));                
-        that.dx = -otherCarrom.dx;
-        that.dy = -otherCarrom.dy;
-    
-        
+
+        otherCarrom.dx = that.velocity*v2X/(distance);
+        otherCarrom.dy = that.velocity*v2Y/(distance);                
+        that.dx = -otherCarrom.velocity*v2X/(distance);
+        that.dy = -otherCarrom.velocity*v2Y/(distance);
+                
         console.log("other carrom: ");
         console.log(otherCarrom.dx);
-        console.log(otherCarrom.dy); 
+        console.log(otherCarrom.dy);
+
+        console.log("this carrom: ");
+        console.log(that.dx);
+        console.log(that.dy); 
+    }
+
+    this.slideLeft = function()
+    {   
+        // checking the boundry of the hole   
+        if(that.x<70)
+        {
+            that.x += 7;                
+        }        
+            that.x -= 7;
+            that.moveGotti();                            
+    }
+
+    this.slideRight = function()
+    {
+         if(that.x > 490)
+         {
+            console.log("right slide");
+            that.x -= 7;    
+         }
+
+         that.x += 7; 
+         that.moveGotti();       
     }
 
     this.eventHandling = function(event)
@@ -152,8 +190,10 @@ function CarromPiece()
 
         if(event.keyCode == 65)
         {
-            that.initSpeed(that.velocity*Math.cos(that.angle*Math.PI/180),
-                -that.velocity*Math.sin(that.angle*Math.PI/180));
+            that.velocity = 15;             
+            that.dx = that.velocity*Math.cos(that.angle*Math.PI/180);
+            that.dy = that.velocity*Math.sin(that.angle*Math.PI/180);             
+            that.initSpeed(that.dx, -that.dy);            
         }
 
         if(event.keyCode == 40)
@@ -172,22 +212,30 @@ function CarromPiece()
         {
             that.velocity++;
             console.log(that.velocity);
+            // that.dx = that.velocity*Math.cos(that.angle);
+            // that.dy = that.velocity*Math.sin(that.angle);
+            // console.log(that.velocity);
+            // console.log("dx : "+ that.dx);
+            // console.log("dy : "+ that.dy);
         }
 
         if(event.keyCode == 67)
         {
             that.velocity--;
+            // that.dx = that.velocity*Math.cos(that.angle);
+            // that.dy = that.velocity*Math.sin(that.angle);
+            // console.log(that.velocity);
+            // console.log("dx : "+ that.dx);
+            // console.log("dy : "+ that.dy);
             console.log(that.velocity);
-        }        
-    }
+        }
 
-    this.slideLeft = function()
-    {        
-        that.x -= 3;                
-    }
-
-    this.slideRight = function()
-    {
-        that.x += 3;    
-    }    
+        if(event.keyCode == 68)
+        {
+            if(Math.abs(that.dx) <= 0.05 && Math.abs(that.dy) <= 0.05)
+            {
+                that.initGottiPos(150, 370);
+            }
+        }
+    }        
 }
