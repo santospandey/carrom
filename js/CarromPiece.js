@@ -4,7 +4,7 @@ function CarromPiece()
 	this.element = document.createElement("div");
     console.log(this.element);    
     
-    this.velocity = 0;
+    this.velocity = 10;
     that._velocity; 
     this.angle = 15;    
 	this.dx = 0;
@@ -14,9 +14,9 @@ function CarromPiece()
     this.radius = 20;    
     this.distanceTravelled = 0;
     this.times = 0;
-    
     this.boardHeight = 400;
     this.boardWidth = 600;
+    this.getVelo = 0;
 
 	this.appendTo = function(parentElement) 
 	{
@@ -41,10 +41,16 @@ function CarromPiece()
 
 	this.moveGotti = function()
 	{
-        that.dx *= 0.98;
-        that.dy *= 0.98;        
+        that.dx -= that.dx*0.06;
+        that.dy -= that.dy*0.06;        
 	    that.x += that.dx;
 	    that.y += that.dy; 
+
+        if(Math.abs(that.dx) <= 0.2 && Math.abs(that.dy) <=0.2){
+            that.dx = 0;
+            that.dy = 0;
+        }
+
 
         var dist = Math.sqrt(that.dx*that.dx + that.dy*that.dy);
         that.distanceTravelled += dist;        
@@ -190,9 +196,11 @@ function CarromPiece()
 
         if(event.keyCode == 65)
         {
-            that.velocity = 15;             
+
+            that.velocity = that.getVelo;             
             that.dx = that.velocity*Math.cos(that.angle*Math.PI/180);
-            that.dy = that.velocity*Math.sin(that.angle*Math.PI/180);             
+            that.dy = that.velocity*Math.sin(that.angle*Math.PI/180); 
+            that.getVelo = 0;            
             that.initSpeed(that.dx, -that.dy);            
         }
 
@@ -210,8 +218,11 @@ function CarromPiece()
 
         if(event.keyCode == 66)
         {
-            that.velocity++;
-            console.log(that.velocity);
+            //var getVelo;
+            // that.vleo = getVelo
+            console.log(that.getVelo);
+            that.getVelo +=4;
+            console.log(that.getVelo);
             // that.dx = that.velocity*Math.cos(that.angle);
             // that.dy = that.velocity*Math.sin(that.angle);
             // console.log(that.velocity);

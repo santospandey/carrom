@@ -60,12 +60,13 @@ function CarromPieceMove()
 
     this.initstriker = function()
     {
+        // debugger;
     	striker = new CarromPiece();
     	striker.addClass("gotti striker");
     	striker.appendTo(carromBoard);
     	striker.initGottiPos(150,370);
         striker.initSpeed(0,0);
-        striker._velocity = 10;
+        // striker._velocity = 10;
     	
         // debugger;
         carromMen[totalCarromMen] = striker;
@@ -73,7 +74,8 @@ function CarromPieceMove()
     }       
 
     this.animate = function()
-    {                
+    { 
+        window.addEventListener("keydown", carromMen[totalCarromMen-1].eventHandling, false);                               
         function move()
         {            
             for(var i = 0; i < totalCarromMen-1; i++)
@@ -82,8 +84,7 @@ function CarromPieceMove()
                 carromMen[i].moveGotti(); 
                 carromMen[i].velocity = Math.sqrt(carromMen[i].dx*carromMen[i].dx + carromMen[i].dy*carromMen[i].dy);
             }
-                //for the striker                 
-                window.addEventListener("keydown", carromMen[totalCarromMen-1].eventHandling, false);                
+                //for the striker                                 
                 carromMen[totalCarromMen-1].detectWall();                                          
                 carromMen[totalCarromMen-1].moveGotti();                                    
             
