@@ -2,39 +2,49 @@ function CarromPieceMove()
 {
     var that = this;
 	var striker;
-	var totalCarromMen = 10;	
-	var carromMen = [];
+	var totalCarromMen;	
+	var carromMen;
+    var wrapper;
+    var carromBoard;
+    var arrow;
 
-	var wrapper = document.createElement("div");
-    wrapper.setAttribute("class", "wrapper");      
-    document.body.appendChild(wrapper);    
-      
-    var carromBoard = document.createElement("div");
-    carromBoard.setAttribute("class", "carromBoard");
-    wrapper.appendChild(carromBoard);
+// initialize variables of class.
+    this.initialization = function()
+    {
+        totalCarromMen = 10;
+        carromMen = [];
 
-    var hole1 = document.createElement("div");
-    hole1.setAttribute("class", "hole");
-    carromBoard.appendChild(hole1);    
+        wrapper = document.createElement("div");
+        wrapper.setAttribute("class", "wrapper");      
+        document.body.appendChild(wrapper);    
 
-    var hole2 = document.createElement("div");
-    hole2.setAttribute("class", "hole");
-    hole2.style.top = 0 + 'px';
-    hole2.style.left = 540 + 'px';
-    carromBoard.appendChild(hole2);    
+        carromBoard = document.createElement("div");
+        carromBoard.setAttribute("class", "carromBoard");
+        wrapper.appendChild(carromBoard);
+    }
+	
+    // var hole1 = document.createElement("div");
+    // hole1.setAttribute("class", "hole");
+    // carromBoard.appendChild(hole1);    
 
-    var hole3 = document.createElement("div");
-    hole3.setAttribute("class", "hole");
-    hole3.style.top = 340 + 'px';
-    hole3.style.left = 0 + 'px';
-    carromBoard.appendChild(hole3);    
+    // var hole2 = document.createElement("div");
+    // hole2.setAttribute("class", "hole");
+    // hole2.style.top = 0 + 'px';
+    // hole2.style.left = 540 + 'px';
+    // carromBoard.appendChild(hole2);    
 
-    var hole4 = document.createElement("div");
-    hole4.setAttribute("class", "hole");
-    hole4.style.left = 540 + 'px';
-    hole4.style.top = 340 + 'px';
-    carromBoard.appendChild(hole4);  
-    console.log("hole4" + parseInt(hole4.style.left));  
+    // var hole3 = document.createElement("div");
+    // hole3.setAttribute("class", "hole");
+    // hole3.style.top = 540 + 'px';
+    // hole3.style.left = 0 + 'px';
+    // carromBoard.appendChild(hole3);    
+
+    // var hole4 = document.createElement("div");
+    // hole4.setAttribute("class", "hole");
+    // hole4.style.left = 540 + 'px';
+    // hole4.style.top = 540 + 'px';
+    // carromBoard.appendChild(hole4);  
+    // console.log("hole4" + parseInt(hole4.style.left));  
 
     this.initCarromMen = function()
     {
@@ -46,32 +56,40 @@ function CarromPieceMove()
 		    carromMen[i].appendTo(carromBoard);		      		    		
 		}
 
-            carromMen[0].initGottiPos(160,150);        
-            carromMen[1].initGottiPos(220,150);
-            carromMen[2].initGottiPos(280,150);
-            carromMen[3].initGottiPos(160,200);
-            carromMen[4].initGottiPos(220,200);
-            carromMen[5].initGottiPos(280,200);
-            carromMen[6].initGottiPos(160,250);
-            carromMen[7].initGottiPos(220,250);
-            carromMen[8].initGottiPos(280,250);
-            carromMen[9].initGottiPos(340,245);    
+            carromMen[0].initGottiPos(260,250);        
+            carromMen[1].initGottiPos(340,250);
+            carromMen[2].initGottiPos(200,250);
+            carromMen[3].initGottiPos(160,300);
+            carromMen[4].initGottiPos(220,300);
+            carromMen[5].initGottiPos(280,300);
+            carromMen[6].initGottiPos(160,350);
+            carromMen[7].initGottiPos(220,350);
+            carromMen[8].initGottiPos(280,350);
+            carromMen[9].initGottiPos(340,345);    
     }
 
+    
     this.initstriker = function()
     {
-        // debugger;
     	striker = new CarromPiece();
     	striker.addClass("gotti striker");
     	striker.appendTo(carromBoard);
-    	striker.initGottiPos(150,370);
-        striker.initSpeed(0,0);
-        // striker._velocity = 10;
-    	
-        // debugger;
+    	striker.initGottiPos(280,468);
+        striker.radius = 15;
+        striker.initSpeed(0,0); 
+        striker.angle = 90;        	        
         carromMen[totalCarromMen] = striker;
         totalCarromMen++;
+        that.initarrow();
+    }
+
+    this.initarrow = function()
+    {        
+        arrow = document.createElement("div");
+        arrow.setAttribute("class", "arrow");
+        carromBoard.appendChild(arrow);
     }       
+
 
     this.animate = function()
     { 
@@ -79,10 +97,9 @@ function CarromPieceMove()
         function move()
         {            
             for(var i = 0; i < totalCarromMen-1; i++)
-            {
+            {''
                 carromMen[i].detectWall();
-                carromMen[i].moveGotti(); 
-                carromMen[i].velocity = Math.sqrt(carromMen[i].dx*carromMen[i].dx + carromMen[i].dy*carromMen[i].dy);
+                carromMen[i].moveGotti();                 
             }
                 //for the striker                                 
                 carromMen[totalCarromMen-1].detectWall();                                          
@@ -90,6 +107,22 @@ function CarromPieceMove()
             
                 carromMen[totalCarromMen-1].velocity = Math.sqrt(carromMen[totalCarromMen-1].dx*
                 carromMen[totalCarromMen-1].dx + carromMen[totalCarromMen-1].dy*carromMen[totalCarromMen-1].dy);
+
+                // for the arrow
+                var cen_X = carromMen[totalCarromMen-1].radius;
+                var cen_Y = carromMen[totalCarromMen-1].radius;
+
+                arrow.setAttribute("style", "transform-origin:" + cen_X + 'px' + cen_Y + 'px' ) ; 
+                arrow.style.left = (parseInt(carromMen[totalCarromMen-1].element.style.left) + cen_X) + 'px';
+                arrow.style.top = (parseInt(carromMen[totalCarromMen-1].element.style.top) + cen_Y) + 'px' ;
+                
+
+                console.log(arrow);
+                var a = -(carromMen[totalCarromMen-1].angle);
+                arrow.style.webkitTransform = 'rotate(' + a + 'deg)';
+                arrow.style.oTransform      = 'rotate(' + a + 'deg)';
+                arrow.style.msTransform     = 'rotate(' + a + 'deg)';
+                arrow.style.transform       = 'rotate(' + a + 'deg)';        
                             
             for(var i = 0; i < totalCarromMen - 1; i++)
             {

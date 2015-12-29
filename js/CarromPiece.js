@@ -11,12 +11,14 @@ function CarromPiece()
 	this.dy = 0;
 	this.x  = 0;
 	this.y = 0;
-    this.radius = 20;    
+    this.radius = 10;    
     this.distanceTravelled = 0;
     this.times = 0;
-    this.boardHeight = 400;
+    this.boardHeight = 600;
     this.boardWidth = 600;
+    this.boardBorder = 52;
     this.getVelo = 0;
+    this.holeRadius = 16;
 
 	this.appendTo = function(parentElement) 
 	{
@@ -36,7 +38,14 @@ function CarromPiece()
     this.initSpeed = function(speedX,speedY)
     {
 	    that.dx = speedX;
-	    that.dy = speedY;        	    
+	    that.dy = speedY;
+        that.velocity = Math.sqrt(that.dx*that.dx + that.dy*that.dy);
+
+    }
+
+    this.calculateDistance = function(otherObj)
+    {
+        return (Math.sqrt(Math.pow((otherCarrom.x - that.x),2) + Math.pow((otherCarrom.y - that.y), 2)));
     }    
 
 	this.moveGotti = function()
@@ -46,35 +55,35 @@ function CarromPiece()
 	    that.x += that.dx;
 	    that.y += that.dy; 
 
-        if(Math.abs(that.dx) <= 0.2 && Math.abs(that.dy) <=0.2){
+        if(Math.abs(that.dx) <= 0.2 && Math.abs(that.dy) <= 0.2)
+        {
             that.dx = 0;
             that.dy = 0;
         }
 
-
-        var dist = Math.sqrt(that.dx*that.dx + that.dy*that.dy);
-        that.distanceTravelled += dist;        
+        that.velocity = Math.sqrt(that.dx*that.dx + that.dy*that.dy);
+        that.distanceTravelled += that.velocity;        
                 
 	    that.element.style.left = that.x + 'px';
 	    that.element.style.top = that.y + 'px';   
 
         // condition to check if gotti will be inside the hole
-        if(that.x < 20 && that.y < 20)
+        if((that.x<(that.boardBorder+that.holeRadius)) && (that.y < (that.boardBorder+that.holeRadius)))
         {            
             that.element.style.background = 'transparent';
         }
 
-        if(that.x < 20 && that.y > 340)
+        if(that.x < (that.boardBorder+that.holeRadius) && that.y > (that.boardWidth - that.boardBorder - that.holeRadius))
         {            
             that.element.style.background = 'transparent';
         }
 
-        if(that.x > 540 && that.y < 20)
+        if(that.x > (that.boardWidth - that.boardBorder - that.holeRadius) && that.y < (that.boardBorder+that.holeRadius))
         {            
             that.element.style.background = 'transparent';
         }
 
-        if(that.x > 540 && that.y > 340)
+        if(that.x > (that.boardWidth - that.boardBorder - that.holeRadius) && that.y > (that.boardWidth - that.boardBorder - that.holeRadius))
         {            
             that.element.style.background = 'transparent';
         }
@@ -87,21 +96,29 @@ function CarromPiece()
 
     this.detectWall = function()
     {    	
-    	if(that.x>(that.boardWidth - 2*that.radius) || that.x<0)
-    	{    		
-    		that.dx = -that.dx;    		
-    	}
+    	if(that.x>(that.boardWidth - that.boardBorder - 2*that.radius))
+    	{   
+    		that.dx = -Math.abs(that.dx);    		
+    	}        
+        else if( that.x < (that.boardBorder))
+        {
+            that.dx = Math.abs(that.dx);
+        }
 
-    	if(that.y>(that.boardHeight - 2*that.radius) || that.y<0)
+    	if(that.y>(that.boardHeight - that.boardBorder - 2*that.radius)) 
     	{    	
-    		that.dy = -that.dy;
-    	}    	
+    		that.dy = -Math.abs(that.dy);
+    	}
+        else if(that.y < that.boardBorder)
+        {
+            that.dy = Math.abs(that.dy);
+        }    	
     }
 
     this.hitTest = function(otherCarrom)
     {
         if(Math.sqrt((that.x - otherCarrom.x)*(that.x - otherCarrom.x) + 
-            (that.y - otherCarrom.y)*(that.y - otherCarrom.y)) < 2*that.radius)
+            (that.y - otherCarrom.y)*(that.y - otherCarrom.y)) < (that.radius + otherCarrom.radius))
         {
             return true;
         }
@@ -112,38 +129,26 @@ function CarromPiece()
     }
 
     this.collision = function(otherCarrom)
-    {
+    {       
         console.log("that dx = " + that.dx + "  that dy = " + that.dy);        
         console.log("other dx = " + otherCarrom.dx + " other dy = " + otherCarrom.dy);         
-        
-        // // for color change 
-        // if(otherCarrom.element.style.background == 'purple')
-        // {
-        //     otherCarrom.element.style.background = 'yellow';                 
-        // }
-        // else{
-        //     otherCarrom.element.style.background = 'purple';                 
-        // }   
-
-        // if(that.element.style.background == 'yellow')
-        // {
-        //     that.element.style.background = 'purple';
-        // }
-        // else{
-        //     that.element.style.background = 'yellow';
-        // }
-
+                
         // for unit vector calculation
         var v2X = otherCarrom.x - that.x;
         var v2Y = otherCarrom.y - that.y;
         var distance = Math.sqrt(Math.pow((otherCarrom.x - that.x),2) + Math.pow((otherCarrom.y - that.y), 2));
 
-        // for reducing divide by zero problem
-        if(v2Y == 0 && v2Y == 0)
+        if(distance == 0)
         {
-            v2Y = 1;
-            v2X = 1;
+            distance = 1;
         }
+
+        // // for reducing divide by zero problem
+        // if(v2Y == 0 && v2Y == 0)
+        // {
+        //     v2Y = 1;
+        //     v2X = 1;
+        // }
 
         otherCarrom.dx = that.velocity*v2X/(distance);
         otherCarrom.dy = that.velocity*v2Y/(distance);                
@@ -245,7 +250,7 @@ function CarromPiece()
         {
             if(Math.abs(that.dx) <= 0.05 && Math.abs(that.dy) <= 0.05)
             {
-                that.initGottiPos(150, 370);
+                that.initGottiPos(280, 468);
             }
         }
     }        
