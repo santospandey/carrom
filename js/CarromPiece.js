@@ -2,8 +2,8 @@ function CarromPiece()
 {
 	var that = this;	
 	this.element = document.createElement("div");
-    console.log(this.element);    
     
+    this.mass;
     this.velocity = 10;
     that._velocity; 
     this.angle = 15;    
@@ -35,12 +35,16 @@ function CarromPiece()
 	    that.y = parseInt(window.getComputedStyle(that.element).getPropertyValue('top'));	       	    
 	}
 
+    this.addClass = function(className) 
+    {
+        that.element.setAttribute("class", className);
+    }
+
     this.initSpeed = function(speedX,speedY)
     {
 	    that.dx = speedX;
 	    that.dy = speedY;
         that.velocity = Math.sqrt(that.dx*that.dx + that.dy*that.dy);
-
     }
 
     this.calculateDistance = function(otherObj)
@@ -50,8 +54,8 @@ function CarromPiece()
 
 	this.moveGotti = function()
 	{
-        that.dx -= that.dx*0.06;
-        that.dy -= that.dy*0.06;        
+        that.dx -= that.dx*0.02;
+        that.dy -= that.dy*0.02;        
 	    that.x += that.dx;
 	    that.y += that.dy; 
 
@@ -89,11 +93,6 @@ function CarromPiece()
         }
     }
 
-    this.addClass = function(className) 
-    {
-    	that.element.setAttribute("class", className);
-    }
-
     this.detectWall = function()
     {    	
     	if(that.x>(that.boardWidth - that.boardBorder - 2*that.radius))
@@ -129,10 +128,7 @@ function CarromPiece()
     }
 
     this.collision = function(otherCarrom)
-    {       
-        console.log("that dx = " + that.dx + "  that dy = " + that.dy);        
-        console.log("other dx = " + otherCarrom.dx + " other dy = " + otherCarrom.dy);         
-                
+    {                                      
         // for unit vector calculation
         var v2X = otherCarrom.x - that.x;
         var v2Y = otherCarrom.y - that.y;
@@ -150,18 +146,10 @@ function CarromPiece()
         //     v2X = 1;
         // }
 
-        otherCarrom.dx = that.velocity*v2X/(distance);
-        otherCarrom.dy = that.velocity*v2Y/(distance);                
-        that.dx = -otherCarrom.velocity*v2X/(distance);
-        that.dy = -otherCarrom.velocity*v2Y/(distance);
-                
-        console.log("other carrom: ");
-        console.log(otherCarrom.dx);
-        console.log(otherCarrom.dy);
-
-        console.log("this carrom: ");
-        console.log(that.dx);
-        console.log(that.dy); 
+        otherCarrom.dx = (that.velocity*v2X/(distance))/otherCarrom.mass;
+        otherCarrom.dy = (that.velocity*v2Y/(distance))/otherCarrom.mass;                
+        that.dx = -(otherCarrom.velocity*v2X/(distance))/that.mass;
+        that.dy = -(otherCarrom.velocity*v2Y/(distance))/that.mass;                
     }
 
     this.slideLeft = function()
@@ -179,7 +167,6 @@ function CarromPiece()
     {
          if(that.x > 490)
          {
-            console.log("right slide");
             that.x -= 7;    
          }
 
@@ -212,22 +199,18 @@ function CarromPiece()
         if(event.keyCode == 40)
         {
             that.angle++;
-            console.log(that.angle);
         }
 
         if(event.keyCode == 38)
         {
             that.angle--;
-            console.log(that.angle);
         }
 
         if(event.keyCode == 66)
         {
             //var getVelo;
             // that.vleo = getVelo
-            console.log(that.getVelo);
             that.getVelo +=4;
-            console.log(that.getVelo);
             // that.dx = that.velocity*Math.cos(that.angle);
             // that.dy = that.velocity*Math.sin(that.angle);
             // console.log(that.velocity);
@@ -243,7 +226,6 @@ function CarromPiece()
             // console.log(that.velocity);
             // console.log("dx : "+ that.dx);
             // console.log("dy : "+ that.dy);
-            console.log(that.velocity);
         }
 
         if(event.keyCode == 68)

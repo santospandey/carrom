@@ -53,7 +53,8 @@ function CarromPieceMove()
 		 	carromMen[i] = new CarromPiece();            
 		    carromMen[i].addClass("gotti");
 		    carromMen[i].initSpeed(0,0);
-		    carromMen[i].appendTo(carromBoard);		      		    		
+		    carromMen[i].appendTo(carromBoard);	
+            carromMen[i].mass = 1;	      		    		
 		}
 
             carromMen[0].initGottiPos(260,250);        
@@ -77,7 +78,8 @@ function CarromPieceMove()
     	striker.initGottiPos(280,468);
         striker.radius = 15;
         striker.initSpeed(0,0); 
-        striker.angle = 90;        	        
+        striker.angle = 90;  
+        striker.mass = 3;      	        
         carromMen[totalCarromMen] = striker;
         totalCarromMen++;
         that.initarrow();
@@ -116,8 +118,6 @@ function CarromPieceMove()
                 arrow.style.left = (parseInt(carromMen[totalCarromMen-1].element.style.left) + cen_X) + 'px';
                 arrow.style.top = (parseInt(carromMen[totalCarromMen-1].element.style.top) + cen_Y) + 'px' ;
                 
-
-                console.log(arrow);
                 var a = -(carromMen[totalCarromMen-1].angle);
                 arrow.style.webkitTransform = 'rotate(' + a + 'deg)';
                 arrow.style.oTransform      = 'rotate(' + a + 'deg)';
