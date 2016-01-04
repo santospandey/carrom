@@ -27,29 +27,6 @@ function CarromPieceMove()
         wrapper.appendChild(carromBoard);
     }
 	
-    // var hole1 = document.createElement("div");
-    // hole1.setAttribute("class", "hole");
-    // carromBoard.appendChild(hole1);    
-
-    // var hole2 = document.createElement("div");
-    // hole2.setAttribute("class", "hole");
-    // hole2.style.top = 0 + 'px';
-    // hole2.style.left = 540 + 'px';
-    // carromBoard.appendChild(hole2);    
-
-    // var hole3 = document.createElement("div");
-    // hole3.setAttribute("class", "hole");
-    // hole3.style.top = 540 + 'px';
-    // hole3.style.left = 0 + 'px';
-    // carromBoard.appendChild(hole3);    
-
-    // var hole4 = document.createElement("div");
-    // hole4.setAttribute("class", "hole");
-    // hole4.style.left = 540 + 'px';
-    // hole4.style.top = 540 + 'px';
-    // carromBoard.appendChild(hole4);  
-    // console.log("hole4" + parseInt(hole4.style.left));  
-
     this.initCarromMen = function()
     {
     	for(var i = 0; i < totalCarromMen; i++)
@@ -60,58 +37,45 @@ function CarromPieceMove()
 		    carromMen[i].appendTo(carromBoard);	
             carromMen[i].mass = 1;	      		    		
 		}
-            carromMen[0].initGottiPos(240,300);
-            carromMen[0].white = true;
-            carromMen[1].initGottiPos(260,300); 
-            carromMen[1].white = true;
-            carromMen[2].initGottiPos(280,300);
-            carromMen[2].white = true;
-            carromMen[3].initGottiPos(260,280);   
-            carromMen[3].white = true;         
-            carromMen[4].initGottiPos(320,300);
-            carromMen[4].white = true;
-            carromMen[5].initGottiPos(340,300);
-            carromMen[5].white = true;
-            carromMen[6].initGottiPos(360,300);
-            carromMen[6].white = true;
-            carromMen[7].initGottiPos(240,320);
-            carromMen[7].white = true;
-            carromMen[8].initGottiPos(260,320); 
-            carromMen[8].white = true;
 
-            carromMen[9].initGottiPos(280,320);
-            carromMen[9].white = false;
-            carromMen[10].initGottiPos(300,320);
-            carromMen[10].white = false;
-            carromMen[11].initGottiPos(320,320);
-            carromMen[11].white = false;
-            carromMen[12].initGottiPos(340,320);
-            carromMen[12].white = false;
-            carromMen[13].initGottiPos(360,320);
-            carromMen[13].white = false;
-            carromMen[14].initGottiPos(280,280);
-            carromMen[14].white = false;
-            carromMen[15].initGottiPos(300,280);
-            carromMen[15].white = false;
-            carromMen[16].initGottiPos(320,280); 
-            carromMen[16].white = false;
-            carromMen[17].initGottiPos(340,280);
-            carromMen[17].white = false;
+        for(var i = 0; i < totalCarromMen; i++)
+        {
+            if(i < 9)
+            {
+                carromMen[i].white = true;
+            }
+            else if(i< totalCarromMen-1)
+            {
+                carromMen[i].white = false;
+                carromMen[i].element.style.backgroundColor = "#01010b";                    
+            }
+            else
+            {
+                carromMen[i].queen = true;
+                carromMen[i].element.style.backgroundColor = "red";                    
+            }                    
+        }
 
-            carromMen[18].initGottiPos(300,300);
-            carromMen[18].element.style.backgroundColor = "red";
-            carromMen[18].queen = true;
-            
-            carromMen[9].element.style.backgroundColor = "#01010b";
-            carromMen[10].element.style.backgroundColor = "#01010b";
-            carromMen[11].element.style.backgroundColor = "#01010b";
-            carromMen[12].element.style.backgroundColor = "#01010b";
-            carromMen[13].element.style.backgroundColor = "#01010b";
-            carromMen[14].element.style.backgroundColor = "#01010b";
-            carromMen[15].element.style.backgroundColor = "#01010b";
-            carromMen[16].element.style.backgroundColor = "#01010b";   
-            carromMen[17].element.style.backgroundColor = "#01010b";   
-
+        carromMen[0].initGottiPos(240,300);
+        carromMen[1].initGottiPos(260,300); 
+        carromMen[2].initGottiPos(280,300);
+        carromMen[3].initGottiPos(260,280);   
+        carromMen[4].initGottiPos(320,300);
+        carromMen[5].initGottiPos(340,300);
+        carromMen[6].initGottiPos(360,300);
+        carromMen[7].initGottiPos(240,320);
+        carromMen[8].initGottiPos(260,320); 
+        carromMen[9].initGottiPos(280,320);
+        carromMen[10].initGottiPos(300,320);
+        carromMen[11].initGottiPos(320,320);
+        carromMen[12].initGottiPos(340,320);
+        carromMen[13].initGottiPos(360,320);
+        carromMen[14].initGottiPos(280,280);
+        carromMen[15].initGottiPos(300,280);
+        carromMen[16].initGottiPos(320,280); 
+        carromMen[17].initGottiPos(340,280);
+        carromMen[18].initGottiPos(300,300);
+    
     }
 
 

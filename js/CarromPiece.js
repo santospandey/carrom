@@ -8,7 +8,7 @@ function CarromPiece()
     this.mass;
     this.velocity = 10;
     that._velocity; 
-    this.angle = 15;    
+    this.angle = 0;    
 	this.dx = 0;
 	this.dy = 0;
 	this.x  = 0;
@@ -81,33 +81,26 @@ function CarromPiece()
             (that.y < (that.boardBorder+that.holeRadius)))
         { 
             return true;
-            // console.log(that.x + "  " + that.y);
-            // that.element.style.background = 'transparent';
         }
 
         if(that.x<(that.boardBorder+that.holeRadius) && 
             that.y > (that.boardWidth - that.boardBorder - that.holeRadius - 1.5*that.radius))
         {
             return true; 
-            // console.log(that.x + "  " + that.y);
-            // that.element.style.background = 'transparent';
         }
 
         if(that.x > (that.boardWidth - that.boardBorder - that.holeRadius - 1.5*that.radius) && 
             that.y < (that.boardBorder+that.holeRadius))
         {
             return true;            
-            // that.element.style.background = 'transparent';
         }
 
         if(that.x > (that.boardWidth - that.boardBorder - that.holeRadius - 1.5*that.radius) && 
             that.y > (that.boardWidth - that.boardBorder - that.holeRadius - 1.5*that.radius))
         {
             return true;            
-            // that.element.style.background = 'transparent';
         }
 
-        else
             return false;
     }
 
@@ -153,7 +146,7 @@ function CarromPiece()
     this.collision = function(otherCarrom)
     {                                      
         // for unit vector calculation
-        var v2X = otherCarrom.x - that.x;
+        var v2X = otherCarrom.x - that.x + 2;
         var v2Y = otherCarrom.y - that.y;
         var distance = Math.sqrt(Math.pow((otherCarrom.x - that.x),2) + Math.pow((otherCarrom.y - that.y), 2));        
 
@@ -171,22 +164,22 @@ function CarromPiece()
     this.slideLeft = function()
     {   
         // checking the boundry of the hole   
-        if(that.x<70)
+        if(that.x < 140)
         {
-            that.x += 1;                
+            that.x += 5;                
         }        
-            that.x -= 1;
+            that.x -= 5;
             that.moveGotti();   
     }
 
     this.slideRight = function()
     {
-        if(that.x > 490)
+        if(that.x > 440)
         {
-           that.x -= 1;    
+           that.x -= 5;    
         }
 
-        that.x += 1; 
+        that.x += 5; 
         that.moveGotti();       
     }
 
@@ -236,24 +229,12 @@ function CarromPiece()
 
         if(event.keyCode == 66)
         {
-            //var getVelo;
-            // that.vleo = getVelo
-            that.getVelo +=4;
-            // that.dx = that.velocity*Math.cos(that.angle);
-            // that.dy = that.velocity*Math.sin(that.angle);
-            // console.log(that.velocity);
-            // console.log("dx : "+ that.dx);
-            // console.log("dy : "+ that.dy);
+            that.getVelo += 4;
         }
 
         if(event.keyCode == 67)
         {
             that.velocity--;
-            // that.dx = that.velocity*Math.cos(that.angle);
-            // that.dy = that.velocity*Math.sin(that.angle);
-            // console.log(that.velocity);
-            // console.log("dx : "+ that.dx);
-            // console.log("dy : "+ that.dy);
         }
 
         if(event.keyCode == 68)
@@ -264,14 +245,14 @@ function CarromPiece()
             }
         }
 
-        // if(event.keyCode == 69)
-        // {
-        //     that.slideup();            
-        // }
+        if(event.keyCode == 69)
+        {
+            that.slideup();            
+        }
 
-        // if(event.keyCode == 70)
-        // {
-        //     that.slidedown();            
-        // }
+        if(event.keyCode == 70)
+        {
+            that.slidedown();            
+        }
     }        
 }
