@@ -1,0 +1,6 @@
+up arrow, down arrow for the changing angle of hit.
+left arrow and right arrow for sliding left and right.
+"B" for increasing velocity.
+"C" for decreasing velocity.
+"A" for final hit.
+"G" for second player turn.
