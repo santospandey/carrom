@@ -212,7 +212,6 @@ function CarromPiece()
             that.getVelo = 0;            
             that.initSpeed(that.dx, -that.dy);
             that.checkArrow = false;
-
         }
 
         if(event.keyCode == 40)
@@ -250,15 +249,5 @@ function CarromPiece()
                 that.checkArrow = true;
             }
         }
-
-        // if(event.keyCode == 69)
-        // {
-        //     that.slideup();
-        // }
-
-        // if(event.keyCode == 70)
-        // {
-        //     that.slidedown();            
-        // }
     }        
 }
