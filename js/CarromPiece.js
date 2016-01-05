@@ -1,28 +1,37 @@
 function CarromPiece()
 {
-	var that = this;	
-	this.element = document.createElement("div");
-    
-    this.queen = false;
+	var that = this;
+    var sound;     
+	this.element;    
+    this.queen;
     this.white;
     this.mass;
-    this.velocity = 10;
-    that._velocity; 
-    this.angle = 0;    
-	this.dx = 0;
-	this.dy = 0;
-	this.x  = 0;
-	this.y = 0;
-    this.radius = 10;    
-    this.distanceTravelled = 0;
-    this.times = 0;
-    this.boardWidth = 600;
-    this.boardBorder = 52;
-    this.getVelo = 0;
-    this.holeRadius = 16;
-    var sound = new Audio("sound/tictic.wav"); 
-    this.rotation;   
+    this.velocity;
+    this.angle;    
+	this.dx;
+	this.dy;
+	this.x;
+	this.y;
+    this.radius;        
+    this.getVelo;
+    this.holeRadius;
+    this.unitSlide;   // for striker 
+    this.rotation;    // flag to check whether the board has rotated or not.
+    this.checkArrow;
 
+
+    this.initialization = function()
+    {
+        that.element = document.createElement("div");
+        that.mass = 1;
+        that.radius = 10;
+        that.boardWidth = 600;
+        that.boardBorder = 52;
+        that.getVelo = 0;
+        that.holeRadius = 16;        
+        sound = new Audio("sound/tictic.wav");
+    }
+    
 	this.appendTo = function(parentElement) 
 	{
 		parentElement.appendChild(this.element);		
@@ -49,12 +58,7 @@ function CarromPiece()
 	    that.dy = speedY;
         that.velocity = Math.sqrt(that.dx*that.dx + that.dy*that.dy);
     }
-
-    this.calculateDistance = function(otherObj)
-    {
-        return (Math.sqrt(Math.pow((otherCarrom.x - that.x),2) + Math.pow((otherCarrom.y - that.y), 2)));
-    }    
-
+    
 	this.moveGotti = function()
 	{
         that.dx -= that.dx*0.02;
@@ -130,10 +134,14 @@ function CarromPiece()
         }            
     }
 
+    this.calculateDistance = function(otherObj)
+    {
+        return (Math.sqrt(Math.pow((otherObj.x - that.x),2) + Math.pow((otherObj.y - that.y), 2)));
+    }
+
     this.hitTest = function(otherCarrom)
     {
-        if(Math.sqrt((that.x - otherCarrom.x)*(that.x - otherCarrom.x) + 
-            (that.y - otherCarrom.y)*(that.y - otherCarrom.y)) < (that.radius + otherCarrom.radius))
+        if(that.calculateDistance(otherCarrom) < (that.radius + otherCarrom.radius))
         {
             sound.play();
             return true;
@@ -149,7 +157,7 @@ function CarromPiece()
         // for unit vector calculation
         var v2X = otherCarrom.x - that.x + 2;
         var v2Y = otherCarrom.y - that.y;
-        var distance = Math.sqrt(Math.pow((otherCarrom.x - that.x),2) + Math.pow((otherCarrom.y - that.y), 2));        
+        var distance = that.calculateDistance(otherCarrom);        
 
         if(distance == 0)
         {
@@ -177,23 +185,11 @@ function CarromPiece()
     {
         if(that.x > 440)
         {
-           that.x -= 5;    
+           that.x -= that.unitSlide;    
         }
 
-        that.x += 5; 
+        that.x += that.unitSlide; 
         that.moveGotti();       
-    }
-
-    this.slideup = function()
-    {
-        that.y -= 1;
-        that.moveGotti();
-    }
-
-    this.slidedown = function()
-    {
-        that.y += 1;
-        that.moveGotti();
     }
 
     this.eventHandling = function(event)
@@ -214,7 +210,9 @@ function CarromPiece()
             that.dx = that.velocity*Math.cos(that.angle*Math.PI/180);
             that.dy = that.velocity*Math.sin(that.angle*Math.PI/180); 
             that.getVelo = 0;            
-            that.initSpeed(that.dx, -that.dy);            
+            that.initSpeed(that.dx, -that.dy);
+            that.checkArrow = false;
+
         }
 
         if(event.keyCode == 40)
@@ -249,17 +247,18 @@ function CarromPiece()
                 {
                     that.initGottiPos(300, 468);                    
                 }
+                that.checkArrow = true;
             }
         }
 
-        if(event.keyCode == 69)
-        {
-            that.slideup();
-        }
+        // if(event.keyCode == 69)
+        // {
+        //     that.slideup();
+        // }
 
-        if(event.keyCode == 70)
-        {
-            that.slidedown();            
-        }
+        // if(event.keyCode == 70)
+        // {
+        //     that.slidedown();            
+        // }
     }        
 }

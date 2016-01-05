@@ -9,16 +9,18 @@ function CarromPieceMove()
     var wrapper;
     var carromBoard;
     var arrow;
-    var rotateBoardAngle = 180;
-    var noOfBoardRotation = 0;
+    var rotateBoardAngle;
+    var noOfBoardRotation;
     var queenpillo;
 
 // initialize variables of class.
     this.initialization = function()
     {
         totalCarromMen= 19;
-        totalblack = 2;
+        totalblack = 9;
         totalwhite = 9;
+        rotateBoardAngle = 180;
+        noOfBoardRotation = 0;
         carromMen = [];
 
         wrapper = document.createElement("div");
@@ -34,7 +36,8 @@ function CarromPieceMove()
     {
     	for(var i = 0; i < totalCarromMen; i++)
 		{
-		 	carromMen[i] = new CarromPiece();            
+		 	carromMen[i] = new CarromPiece(); 
+            carromMen[i].initialization();                                   
 		    carromMen[i].addClass("gotti");
 		    carromMen[i].initSpeed(0,0);
 		    carromMen[i].appendTo(carromBoard);	
@@ -43,7 +46,7 @@ function CarromPieceMove()
 
         for(var i = 0; i < totalCarromMen; i++)
         {
-            if(i < 9)
+            if(i < totalwhite)
             {
                 carromMen[i].white = true;
             }
@@ -77,14 +80,14 @@ function CarromPieceMove()
         carromMen[15].initGottiPos(300,280);
         carromMen[16].initGottiPos(320,280); 
         carromMen[17].initGottiPos(340,280);
-        carromMen[18].initGottiPos(300,300);
-    
+        carromMen[18].initGottiPos(300,300);    
     }
 
 
     this.initstriker = function()
     {
     	striker = new CarromPiece();
+        striker.initialization();
     	striker.addClass("gotti striker");
     	striker.appendTo(carromBoard);
     	striker.initGottiPos(300,468);
@@ -92,7 +95,9 @@ function CarromPieceMove()
         striker.radius = 15;
         striker.initSpeed(0,0); 
         striker.angle = 90;  
-        striker.mass = 2;      
+        striker.mass = 2; 
+        striker.unitSlide = 5;  
+        striker.carromBoard = carromBoard;   
         carromMen[totalCarromMen] = striker;
         totalCarromMen++;
         that.initarrow();
@@ -126,6 +131,7 @@ function CarromPieceMove()
             carromMen[totalCarromMen-1].rotation = true;
             console.log("player1");
         } 
+        
         carromMen[totalCarromMen - 1].initSpeed(0, 0);
         rotateBoardAngle += 180; 
         noOfBoardRotation++; 
@@ -149,7 +155,7 @@ function CarromPieceMove()
             {
                 carromMen[i].detectWall();
                 carromMen[i].moveGotti();   
-
+                
                 var a = carromMen[i].checkhole();
                 if(a == true)
                 {
@@ -164,33 +170,17 @@ function CarromPieceMove()
                         console.log("black  " + totalblack);
                     }
 
-                    if(carromMen[i].queen == true)
-                    {
-                        if(totalblack > 1 && totalwhite > 1)
-                        {
-                            carromMen[i].initGottiPos(300, 300);
-                            carromMen[i].initSpeed(0, 0);
-                        }
-                        else
-                        {
-                            queenpillo = true;                              
-                            carromMen[i].initGottiPos(600, 300);
-                            carromMen[i].initSpeed(0, 0);
-                        }
+                    if(carromMen[i].queen == true && totalwhite > 1 && totalblack > 1)
+                    {                        
+                        carromMen[i].initGottiPos(300, 300);
+                        carromMen[i].initSpeed(0, 0);                        
                     }
-
                     else
                     {
                         carromMen[i].element.style.background = "transparent";
                         carromMen.splice(i, 1);
                         console.log(carromMen.length);
                         totalCarromMen = carromMen.length;
-
-                        if(queenpillo == true)
-                        {
-                            carromMen[totalCarromMen-2].initSpeed(0,0);
-                            carromMen[totalCarromMen-2].initGottiPos(300, 300);
-                        }
                     } 
                 }
 
@@ -218,6 +208,14 @@ function CarromPieceMove()
                 arrow.setAttribute("style", "transform-origin:" + cen_X + 'px' + cen_Y + 'px' ) ; 
                 arrow.style.left = (parseInt(carromMen[totalCarromMen-1].element.style.left) + cen_X - 1) + 'px';
                 arrow.style.top = (parseInt(carromMen[totalCarromMen-1].element.style.top) + cen_Y) + 'px' ;
+                if(carromMen[totalCarromMen-1].checkArrow == true)
+                {
+                    arrow.style.backgroundColor = "red";
+                }
+                else
+                {
+                    arrow.style.backgroundColor = "transparent";
+                }
                 
                 var a = -(carromMen[totalCarromMen-1].angle);
                 arrow.style.webkitTransform = 'rotate(' + a + 'deg)';
@@ -236,7 +234,7 @@ function CarromPieceMove()
                 }
             }            
         }
-            setInterval(move, 1000/30);                            	        	
+            setInterval(move, 1000/50);                            	        	
     }
 }
 
