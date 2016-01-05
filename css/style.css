@@ -9,6 +9,8 @@
 	height: 600px;
 	background-color: gray;
 	background-image: url("../images/carromBoard.jpg"); 
+	-webkit-transform:rotate(0deg);
+	transform-origin: 300px 300px;
 	position: relative;
 	margin: 0px auto;
 }

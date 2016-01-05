@@ -9,12 +9,15 @@ function CarromPieceMove()
     var wrapper;
     var carromBoard;
     var arrow;
+    var rotateBoardAngle = 180;
+    var noOfBoardRotation = 0;
+    var queenpillo;
 
 // initialize variables of class.
     this.initialization = function()
     {
         totalCarromMen= 19;
-        totalblack = 9;
+        totalblack = 2;
         totalwhite = 9;
         carromMen = [];
 
@@ -84,7 +87,7 @@ function CarromPieceMove()
     	striker = new CarromPiece();
     	striker.addClass("gotti striker");
     	striker.appendTo(carromBoard);
-    	striker.initGottiPos(280,468);
+    	striker.initGottiPos(300,468);
         striker.element.style.backgroundImage = "url('images/striker.png')";
         striker.radius = 15;
         striker.initSpeed(0,0); 
@@ -100,11 +103,46 @@ function CarromPieceMove()
         arrow = document.createElement("div");
         arrow.setAttribute("class", "arrow");
         carromBoard.appendChild(arrow);
+    }
+
+    this.rotateBoard = function()
+    {        
+        carromBoard.style.webkitTransform = 'rotate(' + rotateBoardAngle + 'deg)';
+        carromBoard.style.oTransform      = 'rotate(' + rotateBoardAngle + 'deg)';
+        carromBoard.style.msTransform     = 'rotate(' + rotateBoardAngle + 'deg)';
+        carromBoard.style.transform       = 'rotate(' + rotateBoardAngle + 'deg)';
+
+        if(noOfBoardRotation%2 == 1)
+        {
+            carromMen[totalCarromMen - 1].initGottiPos(300, 468);
+            carromMen[totalCarromMen-1].angle = 90;
+            carromMen[totalCarromMen-1].rotation = false;
+            console.log("player2");
+        }
+        else
+        {
+            carromMen[totalCarromMen - 1].initGottiPos(300, 132);
+            carromMen[totalCarromMen-1].angle = 270;
+            carromMen[totalCarromMen-1].rotation = true;
+            console.log("player1");
+        } 
+        carromMen[totalCarromMen - 1].initSpeed(0, 0);
+        rotateBoardAngle += 180; 
+        noOfBoardRotation++; 
+    }
+
+    this.eventHandling = function(event)
+    {
+        if(event.keyCode == 71)
+        {
+            that.rotateBoard();
+        }
     }       
 
     this.animate = function()
     { 
-        window.addEventListener("keydown", carromMen[totalCarromMen-1].eventHandling, false);                               
+        window.addEventListener("keydown", carromMen[totalCarromMen-1].eventHandling, false);
+        window.addEventListener("keydown", that.eventHandling, false);                               
         function move()
         {            
             for(var i = 0; i < totalCarromMen-1; i++)
@@ -120,18 +158,25 @@ function CarromPieceMove()
                         totalwhite--;
                         console.log("white  " + totalwhite);
                     }
-                    else if(carromMen[i].white = false)
+                    if(carromMen[i].white = false)
                     {
                         totalblack--;
                         console.log("black  " + totalblack);
                     }
 
-                    if(carromMen[i].queen == true && totalblack > 1 && totalwhite > 1)
-                    {  
-                        console.log("black  " + totalblack);
-                        console.log("white  " + totalblack);  
-                        carromMen[i].initGottiPos(300, 300);
-                        carromMen[i].initSpeed(0, 0);
+                    if(carromMen[i].queen == true)
+                    {
+                        if(totalblack > 1 && totalwhite > 1)
+                        {
+                            carromMen[i].initGottiPos(300, 300);
+                            carromMen[i].initSpeed(0, 0);
+                        }
+                        else
+                        {
+                            queenpillo = true;                              
+                            carromMen[i].initGottiPos(600, 300);
+                            carromMen[i].initSpeed(0, 0);
+                        }
                     }
 
                     else
@@ -140,6 +185,12 @@ function CarromPieceMove()
                         carromMen.splice(i, 1);
                         console.log(carromMen.length);
                         totalCarromMen = carromMen.length;
+
+                        if(queenpillo == true)
+                        {
+                            carromMen[totalCarromMen-2].initSpeed(0,0);
+                            carromMen[totalCarromMen-2].initGottiPos(300, 300);
+                        }
                     } 
                 }
 
@@ -153,7 +204,7 @@ function CarromPieceMove()
                 var b = carromMen[totalCarromMen - 1].checkhole(); 
                 if(b == true)
                 {                    
-                    carromMen[totalCarromMen - 1].initGottiPos(280, 468);
+                    carromMen[totalCarromMen - 1].initGottiPos(300, 468);
                     carromMen[totalCarromMen - 1].initSpeed(0, 0);
                 }                                 
             

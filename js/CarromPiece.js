@@ -20,7 +20,8 @@ function CarromPiece()
     this.boardBorder = 52;
     this.getVelo = 0;
     this.holeRadius = 16;
-    var sound = new Audio("C:/Users/Santosh/Desktop/crm-backup/carrom/sound/tictic.wav");    
+    var sound = new Audio("sound/tictic.wav"); 
+    this.rotation;   
 
 	this.appendTo = function(parentElement) 
 	{
@@ -209,7 +210,6 @@ function CarromPiece()
 
         if(event.keyCode == 65)
         {
-
             that.velocity = that.getVelo;             
             that.dx = that.velocity*Math.cos(that.angle*Math.PI/180);
             that.dy = that.velocity*Math.sin(that.angle*Math.PI/180); 
@@ -241,13 +241,20 @@ function CarromPiece()
         {
             if(Math.abs(that.dx) <= 0.05 && Math.abs(that.dy) <= 0.05)
             {
-                that.initGottiPos(280, 468);
+                if(that.rotation == true)
+                {
+                    that.initGottiPos(300, 132);
+                }
+                else
+                {
+                    that.initGottiPos(300, 468);                    
+                }
             }
         }
 
         if(event.keyCode == 69)
         {
-            that.slideup();            
+            that.slideup();
         }
 
         if(event.keyCode == 70)
